@@ -32,15 +32,27 @@ app.use(express.json());
 
 
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://pos-frontend-alpha.vercel.app'
+];
+
+// CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:5173', // Adjust this to your client’s origin
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      // Allow requests with no origin (e.g., mobile apps or curl requests)
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
-
-
 
 
 app.use('/api', users);
