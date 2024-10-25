@@ -31,28 +31,36 @@ app.use(express.json());
 
 
 
-
 const allowedOrigins = [
-  'http://localhost:5173',
+ 'http://localhost:5173',
   'https://pos-frontend-alpha.vercel.app'
 ];
 
-// CORS configuration
+// 2. Configure CORS options
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
-      // Allow requests with no origin (e.g., mobile apps or curl requests)
+      // Allow the request if origin is allowed or not provided (like in Postman)
       callback(null, true);
     } else {
+      // Block the request if origin is not in the allowed list
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true,  // Allow credentials such as cookies to be sent with requests
+  optionsSuccessStatus: 200,  // Some browsers choke on status 204 for OPTIONS
 };
 
-// Apply CORS middleware
+// 3. Apply CORS middleware to all routes
 app.use(cors(corsOptions));
+
+// 4. Handle preflight requests (OPTIONS)
+app.options('*', cors(corsOptions));
+
+
+
 
 
 app.use('/api', users);
