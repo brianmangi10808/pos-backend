@@ -219,6 +219,27 @@ router.get('/products/:id', (req, res) => {
 });
 
 // Delete Product
+
+// Deleting a product by ID
+router.delete('/products/:id', (req, res) => {
+    const { id } = req.params;
+
+    const query = 'DELETE FROM products WHERE id = ?';
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // Check if the product was found and deleted
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        res.status(200).json({ message: 'Product deleted successfully' });
+    });
+});
+
 // Delete Product
 // Delete Branch Route
 router.delete('/branches/:id', (req, res) => {
