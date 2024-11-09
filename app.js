@@ -33,8 +33,10 @@ app.use(express.json());
 
 const allowedOrigins = [
  'http://localhost:5173',
-  'https://pos-frontend-alpha.vercel.app'
+  'https://pos-frontend-alpha.vercel.app',
+  'https://myfunding.space'
 ];
+
 
 // 2. Configure CORS options
 const corsOptions = {
